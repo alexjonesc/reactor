@@ -2,6 +2,7 @@ package sequencer
 
 import (
 	"fmt"
+	"math/rand"
 
 	"gitlab.com/gomidi/midi/v2"
 	"gitlab.com/gomidi/midi/v2/drivers"
@@ -25,6 +26,7 @@ type Sequencer struct {
 	activeNotes map[uint8]ActiveNote
 	pattern     []uint8
 	pointer     *int
+	lengths     []uint8
 }
 
 type MidiInut struct {
@@ -65,6 +67,7 @@ func New(out *drivers.Out) Sequencer {
 		activeNotes: make(map[uint8]ActiveNote),
 		pattern:     pat1,
 		pointer:     &pointer,
+		lengths:     []uint8{1, 2, 3, 4},
 	}
 
 	return sq
@@ -136,13 +139,18 @@ func (sq *Sequencer) play(input MidiInut, note uint8) {
 
 	out.Send(midi.NoteOff(outCh, note))
 	err := out.Send(midi.NoteOn(outCh, note, vel))
-	sq.activeNotes[note] = ActiveNote{note: note, length: uint8(4), tick: &startTick}
+	sq.activeNotes[note] = ActiveNote{note: note, length: getNoteLength(sq.lengths), tick: &startTick}
 
 	if err != nil {
 		fmt.Println("Error sending NoteOn:", err)
 	}
 
 	fmt.Println("-> NoteOn:", note, sq.activeNotes)
+}
+
+func getNoteLength(lengths []uint8) uint8 {
+	i := rand.Intn(len(lengths))
+	return lengths[i]
 }
 
 func (sq *Sequencer) stop(note uint8) {
