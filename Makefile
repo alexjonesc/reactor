@@ -7,34 +7,34 @@ help: ## Show this help message
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  %-20s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 build-dev: ## Build development Docker image
-	docker-compose build reactor-dev
+	docker compose build reactor-dev
 
 run-dev: ## Start development environment with hot reload
-	docker-compose up reactor-dev
+	docker compose up reactor-dev
 
 debug: ## Start development environment in background and attach debugger
-	docker-compose up -d reactor-dev
+	docker compose up reactor-dev
 	@echo "Debugger listening on localhost:2345"
 	@echo "Connect your IDE to localhost:2345"
 
 stop: ## Stop all containers
-	docker-compose down
+	docker compose stop
 
 clean: ## Remove containers, volumes, and built binaries
-	docker-compose down -v
+	docker compose down -v
 	rm -rf tmp/
 
 logs: ## Follow logs from development container
-	docker-compose logs -f reactor-dev
+	docker compose logs -f reactor-dev
 
 shell: ## Open shell in running development container
 	docker exec -it reactor-dev /bin/sh
 
 test: ## Run tests in container
-	docker-compose run --rm reactor-dev go test ./...
+	docker compose run --rm reactor-dev go test ./...
 
 lint: ## Run linter in container
-	docker-compose run --rm reactor-dev golangci-lint run
+	docker compose run --rm reactor-dev golangci-lint run
 
 build-prod: ## Build production Docker image
 	docker build --target production -t reactor:latest .
