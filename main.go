@@ -56,7 +56,7 @@ func main() {
 	}
 	defer stop()
 
-	fmt.Println("\n🎵 Listening for MIDI input... (Press Ctrl+C to stop)\n")
+	fmt.Println("\n🎵 Listening for MIDI input... (Press Ctrl+C to stop)")
 
 	// Setup graceful shutdown
 	sigChan := make(chan os.Signal, 1)
@@ -177,7 +177,7 @@ func listMIDIPorts() {
 // runWithoutMIDI runs the application without MIDI input (fallback mode)
 func runWithoutMIDI() {
 	fmt.Println("\n⚠️  Running in fallback mode (no MIDI input)")
-	fmt.Println("Press Ctrl+C to stop\n")
+	fmt.Println("Press Ctrl+C to stop")
 
 	ticker := time.NewTicker(10 * time.Second)
 	defer ticker.Stop()
