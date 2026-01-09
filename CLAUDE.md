@@ -46,17 +46,34 @@ This is a Go-based MIDI processing system that receives MIDI inputs from various
 ## Development Approach
 Start with the simplest working implementation, then iterate. Build each phase completely before moving to the next. Focus on getting MIDI input processing solid before tackling timing and output.
 
-## Docker Development Environment
+## Development Environments
 
-This project uses Docker with Air (hot reload) and Delve (debugging) for development.
+This project supports two development environments:
+
+### Docker Development
+- **Best for**: General development, CI/CD, consistent environments
+- **MIDI Access**: Limited on macOS (physical devices via USB sharing only)
+- **Hot Reload**: Air (port 2345)
+- **Debugging**: Delve (port 2345)
+
+### Native Development (Recommended for MIDI)
+- **Best for**: MIDI testing, working with real hardware
+- **MIDI Access**: Full access to all devices (physical and virtual)
+- **Hot Reload**: Air (port 2346)
+- **Debugging**: Delve (port 2346)
+- **See**: `NATIVE_DEVELOPMENT.md` for complete guide
 
 ### Prerequisites
-- Docker Desktop 4.35+ (for USB/IP MIDI device support on macOS)
+- Docker Desktop 4.35+ (for Docker development)
 - Docker Compose V2
 - Make (optional, for convenience commands)
-- Go 1.25+ (for native development outside Docker)
+- Go 1.25+ (required for native development)
+- Air v1.63.6+ (for native hot reload)
+- Delve v1.26.0+ (for native debugging)
 
 ### Quick Start
+
+**Docker Development:**
 ```bash
 # First time setup
 make env          # Create .env from .env.example
@@ -67,6 +84,23 @@ make run-dev
 
 # In another terminal, attach VS Code debugger
 # Run > Start Debugging > "Connect to Docker Delve" (localhost:2345)
+```
+
+**Native Development (for MIDI):**
+```bash
+# First time setup
+make env          # Create .env from .env.example
+
+# Start with hot reload and debugging
+make run-native   # Foreground (see output)
+# Or
+make debug-native # Background (for VS Code debugging)
+
+# Connect VS Code debugger (if using debug-native)
+# Run > Start Debugging > "Connect to Native Delve (Air)" (localhost:2346)
+
+# Stop when done
+make stop-native
 ```
 
 ### Common Docker Commands
@@ -87,11 +121,21 @@ make build-dev    # Build development image (with Air + Delve)
 make build-prod   # Build production image (optimized, ~15MB)
 ```
 
-**Native Go Commands (when not using Docker):**
+### Common Native Commands
+
+**Development:**
 ```bash
-go build -o reactor .
-go run .
-go test ./...
+make run-native   # Run with Air hot reload (foreground)
+make debug-native # Run in background with debugger
+make stop-native  # Stop background Air process
+make test-native  # Run tests natively
+```
+
+**Direct Go Commands:**
+```bash
+go run .          # Run directly (no hot reload)
+go build -o reactor .  # Build binary
+go test ./...     # Run tests
 ```
 
 ### Development Workflow
