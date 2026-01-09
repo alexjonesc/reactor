@@ -3,7 +3,7 @@ package throttle
 import (
 	"testing"
 
-	"reactor/transform"
+	"reactor/internal/transform"
 )
 
 func makeNote(key uint8) transform.MIDINote {

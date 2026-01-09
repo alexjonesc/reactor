@@ -56,11 +56,12 @@ run-native: ## Run natively with Air hot reload (port 2346)
 	air -c .air.native.toml
 
 debug-native: ## Run natively with Air in background (for debugging)
-	@echo "🎵 Starting native development in background..."
+	@echo "Starting native development in background..."
 	@echo "Debugger listening on localhost:2346"
 	@echo "Connect your IDE to localhost:2346"
 	@echo "Use 'make stop-native' to stop"
 	@echo ""
+	@mkdir -p tmp
 	@nohup air -c .air.native.toml > tmp/air.log 2>&1 & echo $$! > tmp/air.pid
 	@sleep 2
 	@echo "✅ Air started (PID: $$(cat tmp/air.pid))"

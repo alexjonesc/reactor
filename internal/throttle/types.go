@@ -1,6 +1,6 @@
 package throttle
 
-import "reactor/transform"
+import "reactor/internal/transform"
 
 // ThrottleMode defines the throttling strategy
 type ThrottleMode int

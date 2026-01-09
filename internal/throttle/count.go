@@ -1,6 +1,6 @@
 package throttle
 
-import "reactor/transform"
+import "reactor/internal/transform"
 
 // CountThrottler accepts 1 note for every N+1 input notes
 // N=0: all notes pass, N=1: every 2nd note, N=8: every 9th note

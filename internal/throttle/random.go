@@ -3,7 +3,7 @@ package throttle
 import (
 	"math/rand"
 
-	"reactor/transform"
+	"reactor/internal/transform"
 )
 
 // RandomThrottler accepts notes at random intervals influenced by N

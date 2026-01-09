@@ -5,15 +5,15 @@ tmp_dir = "tmp"
 [build]
   args_bin = ["exec", "--headless", "--listen=:2346", "--api-version=2", "--accept-multiclient", "--continue", "./tmp/main"]
   entrypoint = "dlv"
-  cmd = "go build -gcflags='all=-N -l' -o ./tmp/main ."
+  cmd = "go build -gcflags='all=-N -l' -o ./tmp/main ./cmd/reactor"
   delay = 1000
-  exclude_dir = ["tmp", "vendor", ".git", ".idea", ".vscode"]
+  exclude_dir = ["tmp", "vendor", ".git", ".idea", ".vscode", "doc", "pkg"]
   exclude_file = []
   exclude_regex = ["_test.go"]
   exclude_unchanged = false
   follow_symlink = false
   full_bin = ""
-  include_dir = []
+  include_dir = ["cmd", "internal"]
   include_ext = ["go", "tpl", "tmpl", "html"]
   include_file = []
   kill_delay = "0s"
