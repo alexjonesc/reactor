@@ -3,8 +3,12 @@ FROM golang:1.25-alpine AS base
 
 WORKDIR /app
 
-# Install git (required for go mod download with some packages)
-RUN apk add --no-cache git
+# Install git and build dependencies for rtmidi (MIDI support)
+RUN apk add --no-cache \
+    git \
+    build-base \
+    alsa-lib-dev \
+    jack-dev
 
 # Copy go module files
 COPY go.mod go.sum ./
