@@ -1,0 +1,50 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Build artifacts
+tmp/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+
+# Test files
+*.test
+coverage.txt
+*.out
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Docker files (don't copy into build context)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# macOS
+.DS_Store
+
+# Air configurations (native only, not needed in Docker)
+.air.native.toml
+.air.debug.toml
+
+# Development guides
+implementation.md
+NATIVE_DEVELOPMENT.md
+DEBUG_GUIDE.md
+MIDI_GUIDE.md

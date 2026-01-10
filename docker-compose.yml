@@ -1,0 +1,42 @@
+services:
+  reactor-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: reactor-dev
+
+    # Security options required for Delve debugger
+    security_opt:
+      - seccomp:unconfined
+    cap_add:
+      - SYS_PTRACE
+
+    # Port mappings
+    ports:
+      - "2345:2345"  # Delve debugger port
+
+    # Volume mounts
+    volumes:
+      - .:/app                      # Mount source code for hot reload
+      - go-modules:/go/pkg/mod      # Cache Go modules
+
+    # Environment configuration
+    env_file:
+      - .env
+    environment:
+      - CGO_ENABLED=1
+
+    # Keep container running
+    stdin_open: true
+    tty: true
+
+    networks:
+      - reactor-network
+
+volumes:
+  go-modules:
+
+networks:
+  reactor-network:
+    driver: bridge
