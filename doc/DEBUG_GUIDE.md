@@ -139,7 +139,7 @@ make stop && make debug  # Restart container
 **Cause**: Path mapping issue or code not compiled with debug flags
 
 **Solution**:
-1. Verify `.air.toml` has `-gcflags='all=-N -l'` ✓ (already configured)
+1. Verify `.air.docker.toml` has `-gcflags='all=-N -l'` ✓ (already configured)
 2. Restart container: `make stop && make debug`
 3. Wait for rebuild, then reconnect debugger
 

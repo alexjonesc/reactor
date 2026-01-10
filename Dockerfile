@@ -32,7 +32,7 @@ COPY . .
 EXPOSE 2345
 
 # Run Air (which will manage rebuilding and launching via Delve)
-CMD ["air", "-c", ".air.toml"]
+CMD ["air", "-c", ".air.docker.toml"]
 
 # Builder stage - compiles optimized production binary ==========================================================
 FROM base AS builder

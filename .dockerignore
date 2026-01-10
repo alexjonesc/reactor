@@ -39,9 +39,9 @@ docker-compose*.yml
 # macOS
 .DS_Store
 
-# Air configurations
-.air.toml
+# Air configurations (native only, not needed in Docker)
 .air.native.toml
+.air.debug.toml
 
 # Development guides
 implementation.md

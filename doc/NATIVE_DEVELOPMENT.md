@@ -251,7 +251,7 @@ make debug-native   # Native with Delve + MIDI access
 
 ```
 reactor/
-├── .air.toml               # Docker Air config (port 2345)
+├── .air.docker.toml        # Docker Air config (port 2345)
 ├── .air.native.toml        # Native Air config (port 2346)
 ├── .vscode/
 │   └── launch.json         # Both Docker and Native configs

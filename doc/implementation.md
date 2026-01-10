@@ -26,7 +26,7 @@ Set up a complete Docker development environment on the `poc-2` branch with:
 - Environment: Load from `.env` file
 - Note: MIDI device access on macOS may require Docker Desktop 4.35+ USB/IP feature or host network mode
 
-**File: `.air.toml`**
+**File: `.air.docker.toml`**
 - Build command: `go build -gcflags='all=-N -l' -o ./tmp/main .`
 - Run command: `dlv exec --headless --listen=:2345 --api-version=2 --accept-multiclient --continue ./tmp/main`
 - Watch: `*.go` files in all directories, exclude `tmp/`, `.git/`, `vendor/`
@@ -127,7 +127,7 @@ Add Docker commands section with:
 New files (poc-2 branch):
 1. `Dockerfile` - Multi-stage build definition
 2. `docker-compose.yml` - Dev environment orchestration
-3. `.air.toml` - Hot reload configuration
+3. `.air.docker.toml` - Hot reload configuration
 4. `.env.example` - Environment variable template
 5. `.dockerignore` - Build optimization
 6. `Makefile` - Developer commands
@@ -158,7 +158,7 @@ Go application files (to be created as needed):
 1. Create `.dockerignore` (fast, no dependencies)
 2. Create `Dockerfile` (core infrastructure)
 3. Create `docker-compose.yml` (depends on Dockerfile)
-4. Create `.air.toml` (Air config)
+4. Create `.air.docker.toml` (Air config)
 5. Create `.env.example` (configuration template)
 6. Create `Makefile` (convenience layer)
 7. Create `go.mod` (Go module initialization)

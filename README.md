@@ -93,7 +93,7 @@ reactor/
 ├── main.go                    # Application entry point
 ├── go.mod                     # Go module definition
 ├── .env.example               # Environment variables template
-├── .air.toml                  # Docker Air configuration
+├── .air.docker.toml           # Docker Air configuration
 ├── .air.native.toml           # Native Air configuration
 ├── Dockerfile                 # Multi-stage Docker build
 ├── docker-compose.yml         # Docker orchestration

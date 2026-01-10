@@ -201,7 +201,7 @@ To list available MIDI devices on your system, you'll need to run code that quer
 **Hot reload not working:**
 - Ensure source code is mounted: Check `docker-compose.yml` volumes ✓ (already configured)
 - Verify Air is running: `make logs` should show Air watching files
-- Check `.air.toml` includes correct directories
+- Check `.air.docker.toml` includes correct directories
 
 **MIDI devices not found:**
 - Verify Docker Desktop USB sharing is enabled (Settings > Resources > USB Sharing)
