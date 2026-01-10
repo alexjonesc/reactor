@@ -48,9 +48,8 @@ env: ## Create .env file from .env.example
 
 # Native Development Commands (for full MIDI access on macOS)
 
-run-native: ## Run natively with Air hot reload (port 2346)
-	@echo "🎵 Starting native development with Air + Delve..."
-	@echo "Debugger will listen on localhost:2346"
+run-native: ## Run natively with Air hot reload
+	@echo "🎵 Starting native development with Air hot reload..."
 	@echo "MIDI devices: Full access to all devices"
 	@echo ""
 	air -c .air.native.toml
