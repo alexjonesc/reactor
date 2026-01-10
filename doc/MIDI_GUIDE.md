@@ -184,6 +184,10 @@ MIDI_INPUT_DEVICE=SE25
 # Your MIDI output device name
 MIDI_OUTPUT_DEVICE=IAC Driver Bus 1
 
+# Note filter - comma-separated list of allowed notes (leave empty for all notes)
+# Examples: "C4", "B3,C4,D4", "C4,E4,G4"
+ALLOWED_NOTES=
+
 # Enable debug mode
 DEBUG_MODE=true
 
@@ -242,7 +246,26 @@ Good locations for debugging in `main.go`:
 
 The `MessageHandler` supports configurable note filtering to accept only specific notes.
 
-### Filter by MIDI Note Numbers
+### Environment Variable Configuration
+
+The easiest way to configure note filtering is via the `ALLOWED_NOTES` environment variable:
+
+```bash
+# Filter to specific notes
+export ALLOWED_NOTES="B3,C4,D4"
+
+# Allow all notes (default)
+export ALLOWED_NOTES=""
+```
+
+Or in your `.env` file:
+```env
+ALLOWED_NOTES=B3,C4,D4
+```
+
+### Programmatic Configuration
+
+#### Filter by MIDI Note Numbers
 
 ```go
 handler := midi.NewMessageHandler()
@@ -251,7 +274,7 @@ handler := midi.NewMessageHandler()
 handler.SetAllowedNotes([]uint8{60, 62, 64, 65, 67})
 ```
 
-### Filter by Note Names
+#### Filter by Note Names
 
 ```go
 handler := midi.NewMessageHandler()
@@ -260,7 +283,7 @@ handler := midi.NewMessageHandler()
 handler.SetAllowedNoteNames([]string{"C4", "D4", "E4", "F4", "G4"})
 ```
 
-### Clear Filter (Allow All Notes)
+#### Clear Filter (Allow All Notes)
 
 ```go
 // Reset to allow all notes

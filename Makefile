@@ -16,7 +16,7 @@ run: ## Run with Air hot reload
 	@echo "🎵 Starting development with Air hot reload..."
 	@echo "MIDI devices: Full access to all devices"
 	@echo ""
-	air -c .air.native.toml
+	@if [ -f .env ]; then set -a && . ./.env && set +a; fi && air -c .air.native.toml
 
 debug: ## Run with Air hot reload + Delve debugger (port 2346)
 	@echo "🎵 Starting development with Air + Delve..."
@@ -26,7 +26,7 @@ debug: ## Run with Air hot reload + Delve debugger (port 2346)
 	@mkdir -p tmp
 	@printf '#!/bin/bash\nexec dlv exec --headless --listen=:2346 --api-version=2 --accept-multiclient --continue ./tmp/main\n' > tmp/debug.sh
 	@chmod +x tmp/debug.sh
-	air -c .air.debug.toml
+	@if [ -f .env ]; then set -a && . ./.env && set +a; fi && air -c .air.debug.toml
 
 stop: ## Stop any running Delve debugger on port 2346
 	@echo "Stopping any Delve processes on port 2346..."

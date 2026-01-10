@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -25,6 +26,7 @@ func main() {
 	outputDeviceName := getEnv("MIDI_OUTPUT_DEVICE", "IAC Driver Bus 1")
 	debugMode := getEnv("DEBUG_MODE", "true")
 	logLevel := getEnv("LOG_LEVEL", "info")
+	allowedNotesStr := getEnv("ALLOWED_NOTES", "") // comma-separated, e.g., "B3,C4,D4"
 
 	// Display configuration
 	fmt.Printf("Configuration:\n")
@@ -32,6 +34,11 @@ func main() {
 	fmt.Printf("  MIDI Output: %s\n", outputDeviceName)
 	fmt.Printf("  Debug Mode:  %s\n", debugMode)
 	fmt.Printf("  Log Level:   %s\n", logLevel)
+	if allowedNotesStr != "" {
+		fmt.Printf("  Allowed Notes: %s\n", allowedNotesStr)
+	} else {
+		fmt.Printf("  Allowed Notes: all\n")
+	}
 	fmt.Println("=" + repeatString("=", 50))
 
 	// List available MIDI ports
@@ -53,8 +60,11 @@ func main() {
 	// Create message handler
 	handler := midi.NewMessageHandler()
 
-	// Only allow B3 and C4 notes
-	handler.SetAllowedNoteNames([]string{"B3", "C4"})
+	// Configure allowed notes filter
+	if allowedNotesStr != "" {
+		allowedNotes := parseNoteList(allowedNotesStr)
+		handler.SetAllowedNoteNames(allowedNotes)
+	}
 
 	// Start listening for MIDI messages
 	stop, err := gomidi.ListenTo(inputPort, handler.Handle, gomidi.UseSysEx())
@@ -121,4 +131,16 @@ func repeatString(s string, n int) string {
 		result += s
 	}
 	return result
+}
+
+// parseNoteList parses a comma-separated list of note names
+func parseNoteList(s string) []string {
+	var notes []string
+	for _, note := range strings.Split(s, ",") {
+		note = strings.TrimSpace(note)
+		if note != "" {
+			notes = append(notes, note)
+		}
+	}
+	return notes
 }
