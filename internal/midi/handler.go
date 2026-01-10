@@ -9,20 +9,59 @@ import (
 
 // MessageHandler handles incoming MIDI messages
 type MessageHandler struct {
-	OnNoteOn       func(channel, key, velocity uint8)
-	OnNoteOff      func(channel, key uint8)
+	OnNoteOn        func(channel, key, velocity uint8)
+	OnNoteOff       func(channel, key uint8)
 	OnControlChange func(channel, cc, value uint8)
-	OnPitchBend    func(channel uint8, value int)
+	OnPitchBend     func(channel uint8, value int)
 	OnProgramChange func(channel, program uint8)
-	OnAfterTouch   func(channel, pressure uint8)
+	OnAfterTouch    func(channel, pressure uint8)
 	OnPolyAfterTouch func(channel, key, pressure uint8)
-	OnSysEx        func(data []byte)
-	Verbose        bool
+	OnSysEx         func(data []byte)
+	Verbose         bool
+	allowedNotes    map[uint8]bool // nil means all notes allowed
 }
 
 // NewMessageHandler creates a handler with default verbose logging
 func NewMessageHandler() *MessageHandler {
 	return &MessageHandler{Verbose: true}
+}
+
+// SetAllowedNotes configures the handler to only accept specific MIDI note numbers.
+// Pass nil or empty slice to allow all notes.
+func (h *MessageHandler) SetAllowedNotes(notes []uint8) {
+	if len(notes) == 0 {
+		h.allowedNotes = nil
+		return
+	}
+	h.allowedNotes = make(map[uint8]bool, len(notes))
+	for _, note := range notes {
+		h.allowedNotes[note] = true
+	}
+}
+
+// SetAllowedNoteNames configures the handler to only accept specific notes by name.
+// Note names should be in format "C4", "D#3", etc.
+// Pass nil or empty slice to allow all notes.
+func (h *MessageHandler) SetAllowedNoteNames(names []string) {
+	if len(names) == 0 {
+		h.allowedNotes = nil
+		return
+	}
+	h.allowedNotes = make(map[uint8]bool, len(names))
+	for _, name := range names {
+		note := NameToNote(name)
+		if note > 0 || name == "C-1" { // C-1 is note 0
+			h.allowedNotes[note] = true
+		}
+	}
+}
+
+// isNoteAllowed checks if a note passes the filter
+func (h *MessageHandler) isNoteAllowed(key uint8) bool {
+	if h.allowedNotes == nil {
+		return true
+	}
+	return h.allowedNotes[key]
 }
 
 // Handle processes incoming MIDI messages
@@ -46,6 +85,9 @@ func (h *MessageHandler) Handle(msg gomidi.Message, timestampms int32) {
 		}
 
 	case msg.GetNoteStart(&ch, &key, &vel):
+		if !h.isNoteAllowed(key) {
+			return
+		}
 		if h.Verbose {
 			noteName := NoteToName(key)
 			fmt.Printf("[%s] 🎹 Note ON  | Ch:%2d | Note: %3d (%s) | Vel: %3d\n",
@@ -56,6 +98,9 @@ func (h *MessageHandler) Handle(msg gomidi.Message, timestampms int32) {
 		}
 
 	case msg.GetNoteEnd(&ch, &key):
+		if !h.isNoteAllowed(key) {
+			return
+		}
 		if h.Verbose {
 			noteName := NoteToName(key)
 			fmt.Printf("[%s] 🎹 Note OFF | Ch:%2d | Note: %3d (%s)\n",
@@ -103,6 +148,9 @@ func (h *MessageHandler) Handle(msg gomidi.Message, timestampms int32) {
 		}
 
 	case msg.GetPolyAfterTouch(&ch, &key, &vel):
+		if !h.isNoteAllowed(key) {
+			return
+		}
 		if h.Verbose {
 			noteName := NoteToName(key)
 			fmt.Printf("[%s] 👆 PolyAT   | Ch:%2d | Note: %3d (%s) | Pressure: %3d\n",

@@ -238,6 +238,46 @@ Good locations for debugging in `main.go`:
 
 **Recommendation:** Use Docker for general development, run natively when testing MIDI functionality.
 
+## Note Filtering
+
+The `MessageHandler` supports configurable note filtering to accept only specific notes.
+
+### Filter by MIDI Note Numbers
+
+```go
+handler := midi.NewMessageHandler()
+
+// Only accept notes C4, D4, E4, F4, G4 (MIDI numbers 60, 62, 64, 65, 67)
+handler.SetAllowedNotes([]uint8{60, 62, 64, 65, 67})
+```
+
+### Filter by Note Names
+
+```go
+handler := midi.NewMessageHandler()
+
+// Only accept notes by name
+handler.SetAllowedNoteNames([]string{"C4", "D4", "E4", "F4", "G4"})
+```
+
+### Clear Filter (Allow All Notes)
+
+```go
+// Reset to allow all notes
+handler.SetAllowedNotes(nil)
+// or
+handler.SetAllowedNoteNames(nil)
+```
+
+### Filtered Events
+
+The note filter applies to:
+- Note On events
+- Note Off events
+- Polyphonic Aftertouch events
+
+All other MIDI events (CC, pitch bend, program change, etc.) pass through unfiltered.
+
 ## Next Steps
 
 Now that basic MIDI input is working, you can:
