@@ -9,16 +9,16 @@ import (
 
 // MessageHandler handles incoming MIDI messages
 type MessageHandler struct {
-	OnNoteOn        func(channel, key, velocity uint8)
-	OnNoteOff       func(channel, key uint8)
-	OnControlChange func(channel, cc, value uint8)
-	OnPitchBend     func(channel uint8, value int)
-	OnProgramChange func(channel, program uint8)
-	OnAfterTouch    func(channel, pressure uint8)
+	OnNoteOn         func(channel, key, velocity uint8)
+	OnNoteOff        func(channel, key uint8)
+	OnControlChange  func(channel, cc, value uint8)
+	OnPitchBend      func(channel uint8, value int)
+	OnProgramChange  func(channel, program uint8)
+	OnAfterTouch     func(channel, pressure uint8)
 	OnPolyAfterTouch func(channel, key, pressure uint8)
-	OnSysEx         func(data []byte)
-	Verbose         bool
-	allowedNotes    map[uint8]bool // nil means all notes allowed
+	OnSysEx          func(data []byte)
+	Verbose          bool
+	allowedNotes     map[uint8]bool // nil means all notes allowed
 }
 
 // NewMessageHandler creates a handler with default verbose logging

@@ -54,28 +54,21 @@ run-native: ## Run natively with Air hot reload
 	@echo ""
 	air -c .air.native.toml
 
-debug-native: ## Run natively with Air in background (for debugging)
-	@echo "Starting native development in background..."
+debug-native: ## Run natively with Air hot reload + Delve debugger (port 2346)
+	@echo "🎵 Starting native development with Air + Delve..."
 	@echo "Debugger listening on localhost:2346"
-	@echo "Connect your IDE to localhost:2346"
-	@echo "Use 'make stop-native' to stop"
+	@echo "MIDI devices: Full access to all devices"
 	@echo ""
 	@mkdir -p tmp
-	@nohup air -c .air.native.toml > tmp/air.log 2>&1 & echo $$! > tmp/air.pid
-	@sleep 2
-	@echo "✅ Air started (PID: $$(cat tmp/air.pid))"
-	@echo "View logs: tail -f tmp/air.log"
+	@printf '#!/bin/bash\nexec dlv exec --headless --listen=:2346 --api-version=2 --accept-multiclient --continue ./tmp/main\n' > tmp/debug.sh
+	@chmod +x tmp/debug.sh
+	air -c .air.debug.toml
 
-stop-native: ## Stop native Air process
-	@if [ -f tmp/air.pid ]; then \
-		echo "Stopping Air (PID: $$(cat tmp/air.pid))..."; \
-		kill $$(cat tmp/air.pid) 2>/dev/null || echo "Process already stopped"; \
-		rm -f tmp/air.pid; \
-		pkill -f "dlv.*2346" 2>/dev/null || true; \
-		echo "✅ Stopped"; \
-	else \
-		echo "No Air process found"; \
-	fi
+stop-native: ## Stop any running Delve debugger on port 2346
+	@echo "Stopping any Delve processes on port 2346..."
+	@pkill -f "dlv.*2346" 2>/dev/null || true
+	@lsof -ti :2346 | xargs kill -9 2>/dev/null || true
+	@echo "✅ Stopped"
 
 test-native: ## Run tests natively
 	go test ./...
